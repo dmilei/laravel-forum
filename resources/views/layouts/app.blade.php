@@ -17,15 +17,17 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-
+    <style>
+      .btn-info{color: white;}
+    </style>
     @yield('css')
 </head>
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                <a class="navbar-brand" href="{{ url('/discussions') }}">
+                    Discussion Forum
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -72,12 +74,15 @@
                 </div>
             </div>
         </nav>
-
-        @auth
+        @if(!in_array(request()->path(), ['register', 'login', 'password/reset', 'password/email']))
         <main class="container py-4">
             <div class="row">
               <div class="col-md-4">
-                <a href="{{ route('discussions.create') }}" style="width: 100%; color: white;" class="btn btn-info my-2">Add Discussion</a>
+                @auth
+                <a href="{{ route('discussions.create') }}" style="width:100%" class="btn btn-info my-2">Add Discussion</a>
+                @else
+                <a href="{{ route('login') }}" style="width:100%" class="btn btn-info my-2">Sign in to add discussion</a>
+                @endauth
                 <div class="card">
                   <div class="card-header">
                     Channels
@@ -97,10 +102,10 @@
             </div>
         </main>
         @else
-        <main class="py-4">
-            @yield('content')
+        <main class="container py-4">
+          @yield('content')
         </main>
-        @endauth
+        @endif
     </div>
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
