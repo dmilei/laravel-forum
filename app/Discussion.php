@@ -34,6 +34,24 @@ class Discussion extends Model
       'reply_id' => $reply->id
     ]);
 
+    if($reply->owner->id == $this->author->id){
+      return;
+    }
     $reply->owner->notify(new ReplyMarkedAsBestReply($reply->discussion));
+  }
+
+  public function scopeFilterByChannels($query)
+  {
+    if(request()->query('channel')){
+      $channel = Channel::where('slug', request()->query('channel'))->first();
+
+      if($channel){
+        return $query->where('channel_id', $channel->id);
+      }
+
+      return $query;
+    }
+
+    return $query;
   }
 }
